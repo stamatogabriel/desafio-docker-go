@@ -1,0 +1,15 @@
+FROM golang:1-alpine3.10 AS builder
+
+WORKDIR /usr/src
+
+COPY . .
+
+RUN go build -ldflags "-s -w" -o rocks-bin .
+
+FROM scratch
+
+WORKDIR /usr
+
+COPY --from=builder /usr/src/rocks-bin .
+
+ENTRYPOINT [ "./rocks-bin" ]
